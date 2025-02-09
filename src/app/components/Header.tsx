@@ -31,26 +31,44 @@ const navigation = {
   tr: [
     { name: 'Ana Sayfa', href: '/' },
     { name: 'Tedaviler', href: '/treatments' },
+    { name: 'Hakkımızda', href: '/about' },
+    { name: 'Blog', href: '/blog' },
+    { name: 'İletişim', href: '/contact' },
   ],
   en: [
     { name: 'Home', href: '/' },
     { name: 'Treatments', href: '/treatments' },
+    { name: 'About Us', href: '/about' },
+    { name: 'Blog', href: '/blog' },
+    { name: 'Contact', href: '/contact' },
   ],
   de: [
     { name: 'Startseite', href: '/' },
     { name: 'Behandlungen', href: '/treatments' },
+    { name: 'Über Uns', href: '/about' },
+    { name: 'Blog', href: '/blog' },
+    { name: 'Kontakt', href: '/contact' },
   ],
   fr: [
     { name: 'Accueil', href: '/' },
     { name: 'Traitements', href: '/treatments' },
+    { name: 'À Propos', href: '/about' },
+    { name: 'Blog', href: '/blog' },
+    { name: 'Contact', href: '/contact' },
   ],
   ru: [
     { name: 'Главная', href: '/' },
     { name: 'Лечение', href: '/treatments' },
+    { name: 'О Нас', href: '/about' },
+    { name: 'Блог', href: '/blog' },
+    { name: 'Контакты', href: '/contact' },
   ],
   ar: [
     { name: 'الرئيسية', href: '/' },
     { name: 'العلاجات', href: '/treatments' },
+    { name: 'من نحن', href: '/about' },
+    { name: 'المدونة', href: '/blog' },
+    { name: 'اتصل بنا', href: '/contact' },
   ],
 } as const
 

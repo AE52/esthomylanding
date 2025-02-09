@@ -122,7 +122,7 @@ export default function Home() {
         </Heading>
         <SimpleGrid columns={{ base: 1, md: 2, lg: 4 }} spacing={8}>
           {treatments.map((treatment) => {
-            const translation = treatment.translations[lang]
+            const translation = treatment.translations[lang] || treatment.translations.en
             return (
               <TreatmentCard
                 key={treatment.id}

@@ -39,33 +39,45 @@ export function TreatmentCard({ id, title, description, image }: TreatmentCardPr
 
   return (
     <Box
-      maxW="sm"
+      width="100%"
+      height="450px"
       borderWidth="1px"
       borderRadius="lg"
       overflow="hidden"
-      transition="transform 0.2s"
-      _hover={{ transform: 'scale(1.02)' }}
+      transition="all 0.2s"
+      _hover={{ transform: 'scale(1.02)', shadow: 'lg' }}
       bg="white"
       shadow="md"
       onClick={handleClick}
       cursor="pointer"
       role="group"
+      display="flex"
+      flexDirection="column"
     >
-        <Box position="relative" width="100%" height="200px">
-          <Image
-            src={image}
-            alt={title}
-            fill
-            style={{ objectFit: 'cover' }}
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
-            priority
-          />
-        </Box>
-      <VStack p={6} align="start" spacing={3}>
-        <Heading size="md">{truncatedTitle}</Heading>
-        <Text color="gray.600" noOfLines={3}>
-          {description}
-        </Text>
+      <Box position="relative" width="100%" height="250px" flexShrink={0}>
+        <Image
+          src={image}
+          alt={title}
+          fill
+          style={{ objectFit: 'cover' }}
+          sizes="(max-width: 480px) 100vw, (max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
+          priority
+        />
+      </Box>
+      <VStack 
+        p={6} 
+        align="start" 
+        spacing={4} 
+        flex={1}
+        justify="space-between"
+        width="100%"
+      >
+        <VStack align="start" spacing={2} width="100%">
+          <Heading size="md" noOfLines={2}>{truncatedTitle}</Heading>
+          <Text color="gray.600" noOfLines={3}>
+            {description}
+          </Text>
+        </VStack>
         <HStack spacing={2} width="100%">
           <Button 
             colorScheme="blue" 
