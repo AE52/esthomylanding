@@ -18,138 +18,138 @@ const footerContent = {
   tr: {
     about: {
       title: 'Hakkımızda',
-      description: 'Modern diş hekimliği hizmetleri ile sizlere en iyi tedavi deneyimini sunuyoruz.',
+      description: 'Türkiye\'nin önde gelen sağlık turizmi platformu olarak, sizlere en kaliteli sağlık hizmetlerini sunuyoruz.',
     },
     links: {
       title: 'Hızlı Bağlantılar',
       items: [
         { label: 'Ana Sayfa', href: '/' },
-        { label: 'Hizmetler', href: '/services' },
+        { label: 'Tedaviler', href: '/treatments' },
         { label: 'Randevu Al', href: '/appointment' },
         { label: 'İletişim', href: '/contact' },
       ],
     },
     contact: {
       title: 'İletişim',
-      address: 'Örnek Mahallesi, Örnek Sokak No:1',
+      address: 'Maslak, Büyükdere Caddesi No:255',
       city: 'İstanbul, Türkiye',
       email: 'info@esthomy.com',
-      phone: '+90 (212) 123 45 67',
+      phone: '+90 (850) 123 45 67',
     },
     copyright: '© 2024 Esthomy. Tüm hakları saklıdır.',
   },
   en: {
     about: {
       title: 'About Us',
-      description: 'We provide the best treatment experience with modern dentistry services.',
+      description: 'As Turkey\'s leading health tourism platform, we provide you with the highest quality healthcare services.',
     },
     links: {
       title: 'Quick Links',
       items: [
         { label: 'Home', href: '/' },
-        { label: 'Services', href: '/services' },
+        { label: 'Treatments', href: '/treatments' },
         { label: 'Book Appointment', href: '/appointment' },
         { label: 'Contact', href: '/contact' },
       ],
     },
     contact: {
       title: 'Contact',
-      address: 'Example Street, Example Road No:1',
+      address: 'Maslak, Buyukdere Street No:255',
       city: 'Istanbul, Turkey',
       email: 'info@esthomy.com',
-      phone: '+90 (212) 123 45 67',
+      phone: '+90 (850) 123 45 67',
     },
     copyright: '© 2024 Esthomy. All rights reserved.',
   },
   de: {
     about: {
       title: 'Über uns',
-      description: 'Wir bieten Ihnen die beste Behandlungserfahrung mit modernen zahnmedizinischen Dienstleistungen.',
+      description: 'Als führende Plattform für Gesundheitstourismus in der Türkei bieten wir Ihnen medizinische Dienstleistungen von höchster Qualität.',
     },
     links: {
       title: 'Schnellzugriff',
       items: [
         { label: 'Startseite', href: '/' },
-        { label: 'Leistungen', href: '/services' },
+        { label: 'Behandlungen', href: '/treatments' },
         { label: 'Termin vereinbaren', href: '/appointment' },
         { label: 'Kontakt', href: '/contact' },
       ],
     },
     contact: {
       title: 'Kontakt',
-      address: 'Beispielstraße, Beispielweg Nr. 1',
+      address: 'Maslak, Büyükdere Straße Nr. 255',
       city: 'Istanbul, Türkei',
       email: 'info@esthomy.com',
-      phone: '+90 (212) 123 45 67',
+      phone: '+90 (850) 123 45 67',
     },
     copyright: '© 2024 Esthomy. Alle Rechte vorbehalten.',
   },
   fr: {
     about: {
       title: 'À propos',
-      description: 'Nous vous offrons la meilleure expérience de traitement avec des services dentaires modernes.',
+      description: 'En tant que principale plateforme de tourisme de santé en Turquie, nous vous proposons des services de santé de la plus haute qualité.',
     },
     links: {
       title: 'Liens rapides',
       items: [
         { label: 'Accueil', href: '/' },
-        { label: 'Services', href: '/services' },
+        { label: 'Traitements', href: '/treatments' },
         { label: 'Rendez-vous', href: '/appointment' },
         { label: 'Contact', href: '/contact' },
       ],
     },
     contact: {
       title: 'Contact',
-      address: 'Rue Exemple, Route Exemple N°1',
+      address: 'Maslak, Avenue Büyükdere N°255',
       city: 'Istanbul, Turquie',
       email: 'info@esthomy.com',
-      phone: '+90 (212) 123 45 67',
+      phone: '+90 (850) 123 45 67',
     },
     copyright: '© 2024 Esthomy. Tous droits réservés.',
   },
   ru: {
     about: {
       title: 'О нас',
-      description: 'Мы предоставляем лучший опыт лечения с современными стоматологическими услугами.',
+      description: 'Как ведущая платформа медицинского туризма в Турции, мы предоставляем вам медицинские услуги высочайшего качества.',
     },
     links: {
       title: 'Быстрые ссылки',
       items: [
         { label: 'Главная', href: '/' },
-        { label: 'Услуги', href: '/services' },
+        { label: 'Лечение', href: '/treatments' },
         { label: 'Записаться', href: '/appointment' },
         { label: 'Контакты', href: '/contact' },
       ],
     },
     contact: {
       title: 'Контакты',
-      address: 'Пример улицы, Пример дороги №1',
+      address: 'Маслак, Проспект Бююкдере №255',
       city: 'Стамбул, Турция',
       email: 'info@esthomy.com',
-      phone: '+90 (212) 123 45 67',
+      phone: '+90 (850) 123 45 67',
     },
     copyright: '© 2024 Esthomy. Все права защищены.',
   },
   ar: {
     about: {
       title: 'من نحن',
-      description: 'نقدم أفضل تجربة علاج مع خدمات طب الأسنان الحديثة.',
+      description: 'كمنصة رائدة للسياحة الصحية في تركيا، نقدم لكم خدمات صحية عالية الجودة.',
     },
     links: {
       title: 'روابط سريعة',
       items: [
         { label: 'الرئيسية', href: '/' },
-        { label: 'الخدمات', href: '/services' },
+        { label: 'العلاجات', href: '/treatments' },
         { label: 'حجز موعد', href: '/appointment' },
         { label: 'اتصل بنا', href: '/contact' },
       ],
     },
     contact: {
       title: 'اتصل بنا',
-      address: 'شارع نموذجي، طريق نموذجي رقم 1',
+      address: 'مسلك، شارع بيوكديري رقم 255',
       city: 'اسطنبول، تركيا',
       email: 'info@esthomy.com',
-      phone: '+90 (212) 123 45 67',
+      phone: '+90 (850) 123 45 67',
     },
     copyright: '© 2024 Esthomy. جميع الحقوق محفوظة.',
   },
@@ -157,8 +157,8 @@ const footerContent = {
 
 export function Footer() {
   const params = useParams()
-  const currentLang = params.lang as keyof typeof footerContent
-  const content = footerContent[currentLang]
+  const currentLang = (params?.lang as keyof typeof footerContent) || 'en'
+  const content = footerContent[currentLang] || footerContent.en
   
   const bg = useColorModeValue('gray.50', 'gray.900')
   const borderColor = useColorModeValue('gray.200', 'gray.700')

@@ -8,44 +8,44 @@ import { useParams } from 'next/navigation'
 
 const welcomeText = {
   tr: {
-    title: 'Hoş Geldiniz',
-    subtitle: 'Modern diş hekimliği hizmetleri ile yanınızdayız',
-    sectionTitle: 'Tedavilerimiz',
+    title: 'Esthomy\'ye Hoş Geldiniz',
+    subtitle: 'Türkiye\'nin önde gelen sağlık turizmi platformu',
+    sectionTitle: 'Tedavi Seçenekleri',
     loading: 'Yükleniyor...',
     error: 'Tedaviler yüklenirken bir hata oluştu.'
   },
   en: {
-    title: 'Welcome',
-    subtitle: 'We are here with modern dentistry services',
-    sectionTitle: 'Our Treatments',
+    title: 'Welcome to Esthomy',
+    subtitle: 'Turkey\'s leading health tourism platform',
+    sectionTitle: 'Treatment Options',
     loading: 'Loading...',
     error: 'An error occurred while loading treatments.'
   },
   de: {
-    title: 'Willkommen',
-    subtitle: 'Wir sind für Sie da mit modernen zahnmedizinischen Dienstleistungen',
-    sectionTitle: 'Unsere Behandlungen',
+    title: 'Willkommen bei Esthomy',
+    subtitle: 'Die führende Plattform für Gesundheitstourismus in der Türkei',
+    sectionTitle: 'Behandlungsmöglichkeiten',
     loading: 'Wird geladen...',
     error: 'Beim Laden der Behandlungen ist ein Fehler aufgetreten.'
   },
   fr: {
-    title: 'Bienvenue',
-    subtitle: 'Nous sommes là avec des services dentaires modernes',
-    sectionTitle: 'Nos Traitements',
+    title: 'Bienvenue sur Esthomy',
+    subtitle: 'La principale plateforme de tourisme de santé en Turquie',
+    sectionTitle: 'Options de Traitement',
     loading: 'Chargement...',
     error: 'Une erreur est survenue lors du chargement des traitements.'
   },
   ru: {
-    title: 'Добро пожаловать',
-    subtitle: 'Мы здесь с современными стоматологическими услугами',
-    sectionTitle: 'Наши процедуры',
+    title: 'Добро пожаловать в Esthomy',
+    subtitle: 'Ведущая платформа медицинского туризма в Турции',
+    sectionTitle: 'Варианты Лечения',
     loading: 'Загрузка...',
     error: 'Произошла ошибка при загрузке процедур.'
   },
   ar: {
-    title: 'مرحباً بكم',
-    subtitle: 'نحن هنا مع خدمات طب الأسنان الحديثة',
-    sectionTitle: 'علاجاتنا',
+    title: 'مرحباً بكم في Esthomy',
+    subtitle: 'المنصة الرائدة للسياحة الصحية في تركيا',
+    sectionTitle: 'خيارات العلاج',
     loading: 'جار التحميل...',
     error: 'حدث خطأ أثناء تحميل العلاجات.'
   }
