@@ -53,8 +53,8 @@ const welcomeText = {
 
 export default function Home() {
   const params = useParams()
-  const lang = params.lang as keyof typeof welcomeText
-  const text = welcomeText[lang]
+  const lang = (params?.lang as keyof typeof welcomeText) || 'en'
+  const text = welcomeText[lang] || welcomeText.en
 
   const [treatments, setTreatments] = React.useState<ParsedTreatment[]>([])
   const [loading, setLoading] = React.useState(true)
@@ -129,7 +129,7 @@ export default function Home() {
                 id={treatment.id}
                 title={translation?.title || ''}
                 description={translation?.description || ''}
-                imageUrl={treatment.imageUrl}
+                image={treatment.imageUrl}
               />
             )
           })}

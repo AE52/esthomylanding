@@ -3,7 +3,6 @@
 import React from 'react'
 import {
   Box,
-  Image,
   Text,
   VStack,
   Heading,
@@ -12,15 +11,16 @@ import {
 } from '@chakra-ui/react'
 import { useRouter } from 'next/navigation'
 import { useParams } from 'next/navigation'
+import Image from 'next/image'
 
 interface TreatmentCardProps {
-  id: number
+  id: string | number
   title: string
   description: string
-  imageUrl: string
+  image: string
 }
 
-export function TreatmentCard({ id, title, description, imageUrl }: TreatmentCardProps) {
+export function TreatmentCard({ id, title, description, image }: TreatmentCardProps) {
   const params = useParams()
   const router = useRouter()
   const lang = params.lang
@@ -51,15 +51,16 @@ export function TreatmentCard({ id, title, description, imageUrl }: TreatmentCar
       cursor="pointer"
       role="group"
     >
-      <Image
-        src={imageUrl}
-        alt={title}
-        height="200px"
-        width="100%"
-        objectFit="cover"
-        transition="transform 0.2s"
-        _groupHover={{ transform: 'scale(1.05)' }}
-      />
+        <Box position="relative" width="100%" height="200px">
+          <Image
+            src={image}
+            alt={title}
+            fill
+            style={{ objectFit: 'cover' }}
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
+            priority
+          />
+        </Box>
       <VStack p={6} align="start" spacing={3}>
         <Heading size="md">{truncatedTitle}</Heading>
         <Text color="gray.600" noOfLines={3}>
