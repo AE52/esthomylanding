@@ -6,16 +6,6 @@ import Logo from '../logo.svg'
 
 const inter = Inter({ subsets: ['latin'] })
 
-export const metadata: Metadata = {
-  title: 'Esthomy - Modern Diş Kliniği',
-  description: 'Modern diş hekimliği hizmetleri ile yanınızdayız',
-  icons: {
-    icon: '/favicon.ico',
-    shortcut: '/favicon.ico',
-    apple: '/favicon.ico',
-  }
-}
-
 export default function RootLayout({
   children,
 }: {
@@ -23,9 +13,6 @@ export default function RootLayout({
 }) {
   return (
     <html lang="tr">
-      <head>
-        <link rel="icon" href="/favicon.ico" />
-      </head>
       <body className={inter.className}>
         <Providers>
           {children}

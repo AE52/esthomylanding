@@ -26,6 +26,16 @@ import Link from 'next/link'
 import { default as LogoSvg } from '../../../public/logo.svg'
 import { useParams, useRouter } from 'next/navigation'
 import { locales, localeNames, defaultLocale } from '../../middleware'
+import ReactFlagsSelect from 'react-flags-select'
+
+const countryCodeMap = {
+  tr: 'TR',
+  en: 'GB',
+  de: 'DE',
+  fr: 'FR',
+  ru: 'RU',
+  ar: 'SA',
+} as const
 
 const navigation = {
   tr: [
@@ -80,6 +90,19 @@ export function Header() {
   const borderColor = useColorModeValue('gray.200', 'gray.700')
   const { isOpen, onOpen, onClose } = useDisclosure()
 
+  const handleCountrySelect = (countryCode: string) => {
+    const localeMap = {
+      TR: 'tr',
+      GB: 'en',
+      DE: 'de',
+      FR: 'fr',
+      RU: 'ru',
+      SA: 'ar',
+    } as const
+    const locale = localeMap[countryCode as keyof typeof localeMap]
+    router.push(`/${locale}`)
+  }
+
   return (
     <Box bg={bg} borderBottom="1px" borderColor={borderColor} position="sticky" top={0} zIndex={1000}>
       <Container maxW="container.xl">
@@ -120,22 +143,71 @@ export function Header() {
             ))}
             
             {/* Language Selector */}
-            <Menu>
-              <MenuButton as={Button} rightIcon={<ChevronDownIcon />} variant="ghost">
-                {localeNames[currentLang as keyof typeof localeNames]}
-              </MenuButton>
-              <MenuList>
-                {locales.map((locale) => (
-                  <MenuItem 
-                    key={locale}
-                    onClick={() => router.push(`/${locale}`)}
-                    dir={locale === 'ar' ? 'rtl' : 'ltr'}
-                  >
-                    {localeNames[locale as keyof typeof localeNames]}
-                  </MenuItem>
-                ))}
-              </MenuList>
-            </Menu>
+            <Box 
+              ml={2}
+              sx={{
+                '.flag-select': {
+                  backgroundColor: 'transparent',
+                  border: 'none',
+                  borderRadius: 'lg',
+                  minWidth: '120px',
+                  maxWidth: '150px',
+                },
+                '.flag-select__btn': {
+                  padding: '6px 8px',
+                  fontSize: 'sm',
+                  fontWeight: 'medium',
+                  color: useColorModeValue('gray.700', 'gray.200'),
+                  backgroundColor: useColorModeValue('gray.50', 'gray.700'),
+                  borderRadius: 'lg',
+                  border: '1px solid',
+                  borderColor: useColorModeValue('gray.200', 'gray.600'),
+                  transition: 'all 0.2s',
+                  _hover: {
+                    borderColor: useColorModeValue('blue.500', 'blue.300'),
+                    boxShadow: 'sm',
+                    transform: 'translateY(-1px)'
+                  }
+                },
+                '.flag-select__options': {
+                  backgroundColor: useColorModeValue('white', 'gray.800'),
+                  border: '1px solid',
+                  borderColor: useColorModeValue('gray.200', 'gray.600'),
+                  borderRadius: 'lg',
+                  boxShadow: 'lg',
+                  padding: '0.5rem 0',
+                  marginTop: '0.5rem',
+                  minWidth: '150px'
+                },
+                '.flag-select__option': {
+                  padding: '0.5rem 1rem',
+                  fontSize: 'sm',
+                  transition: 'all 0.2s',
+                  _hover: {
+                    backgroundColor: useColorModeValue('blue.50', 'gray.700'),
+                    color: useColorModeValue('blue.600', 'blue.200')
+                  }
+                },
+                '.flag-select__img': {
+                  width: '20px !important',
+                  height: '15px !important'
+                }
+              }}
+            >
+              <ReactFlagsSelect
+                selected={countryCodeMap[currentLang as keyof typeof countryCodeMap]}
+                onSelect={handleCountrySelect}
+                countries={Object.values(countryCodeMap)}
+                customLabels={localeNames}
+                placeholder="Dil Seçin"
+                selectButtonClassName="flag-select__btn"
+                optionsSize={14}
+                selectedSize={14}
+                showSelectedLabel={false}
+                showOptionLabel={true}
+                fullWidth={false}
+              />
+            </Box>
           </Flex>
 
           {/* Mobile Menu Button */}
@@ -164,25 +236,70 @@ export function Header() {
                   ))}
                   
                   {/* Mobile Language Selector */}
-                  <Menu>
-                    <MenuButton as={Button} rightIcon={<ChevronDownIcon />} variant="ghost" w="full">
-                      {localeNames[currentLang as keyof typeof localeNames]}
-                    </MenuButton>
-                    <MenuList>
-                      {locales.map((locale) => (
-                        <MenuItem 
-                          key={locale}
-                          onClick={() => {
-                            router.push(`/${locale}`);
-                            onClose();
-                          }}
-                          dir={locale === 'ar' ? 'rtl' : 'ltr'}
-                        >
-                          {localeNames[locale as keyof typeof localeNames]}
-                        </MenuItem>
-                      ))}
-                    </MenuList>
-                  </Menu>
+                  <Box 
+                    w="full" 
+                    mt={4}
+                    sx={{
+                      '.flag-select': {
+                        backgroundColor: 'transparent',
+                        border: 'none',
+                        borderRadius: 'lg',
+                        width: '100%'
+                      },
+                      '.flag-select__btn': {
+                        padding: '8px 12px',
+                        fontSize: 'sm',
+                        fontWeight: 'medium',
+                        color: useColorModeValue('gray.700', 'gray.200'),
+                        backgroundColor: useColorModeValue('gray.50', 'gray.700'),
+                        borderRadius: 'lg',
+                        border: '1px solid',
+                        borderColor: useColorModeValue('gray.200', 'gray.600'),
+                        transition: 'all 0.2s',
+                        width: '100%',
+                        _hover: {
+                          borderColor: useColorModeValue('blue.500', 'blue.300'),
+                          boxShadow: 'sm'
+                        }
+                      },
+                      '.flag-select__options': {
+                        backgroundColor: useColorModeValue('white', 'gray.800'),
+                        border: '1px solid',
+                        borderColor: useColorModeValue('gray.200', 'gray.600'),
+                        borderRadius: 'lg',
+                        boxShadow: 'lg',
+                        padding: '0.5rem 0',
+                        marginTop: '0.5rem'
+                      },
+                      '.flag-select__option': {
+                        padding: '0.5rem 1rem',
+                        fontSize: 'sm',
+                        transition: 'all 0.2s',
+                        _hover: {
+                          backgroundColor: useColorModeValue('blue.50', 'gray.700'),
+                          color: useColorModeValue('blue.600', 'blue.200')
+                        }
+                      },
+                      '.flag-select__img': {
+                        width: '20px !important',
+                        height: '15px !important'
+                      }
+                    }}
+                  >
+                    <ReactFlagsSelect
+                      selected={countryCodeMap[currentLang as keyof typeof countryCodeMap]}
+                      onSelect={handleCountrySelect}
+                      countries={Object.values(countryCodeMap)}
+                      customLabels={localeNames}
+                      placeholder="Dil Seçin"
+                      selectButtonClassName="flag-select__btn"
+                      optionsSize={14}
+                      selectedSize={14}
+                      showSelectedLabel={true}
+                      showOptionLabel={true}
+                      fullWidth={true}
+                    />
+                  </Box>
                 </VStack>
               </DrawerBody>
             </DrawerContent>

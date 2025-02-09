@@ -1,6 +1,6 @@
 'use client'
 
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import {
   Box,
   Container,
@@ -10,9 +10,15 @@ import {
   Flex,
   useColorModeValue,
   Link as ChakraLink,
+  Input,
+  Button,
+  useToast,
+  VStack,
 } from '@chakra-ui/react'
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL
 
 const footerContent = {
   tr: {
@@ -155,13 +161,126 @@ const footerContent = {
   },
 }
 
+const newsletterContent = {
+  tr: {
+    title: 'Bültenimize Abone Olun',
+    placeholder: 'E-posta adresiniz',
+    button: 'Abone Ol',
+    success: 'Bültene başarıyla abone oldunuz!',
+    error: 'Bir hata oluştu, lütfen tekrar deneyin.',
+  },
+  en: {
+    title: 'Subscribe to Our Newsletter',
+    placeholder: 'Your email',
+    button: 'Subscribe',
+    success: 'Successfully subscribed to the newsletter!',
+    error: 'An error occurred, please try again.',
+  },
+  de: {
+    title: 'Newsletter abonnieren',
+    placeholder: 'Ihre E-Mail',
+    button: 'Abonnieren',
+    success: 'Newsletter erfolgreich abonniert!',
+    error: 'Ein Fehler ist aufgetreten, bitte versuchen Sie es erneut.',
+  },
+  fr: {
+    title: 'Abonnez-vous à notre newsletter',
+    placeholder: 'Votre e-mail',
+    button: "S'abonner",
+    success: 'Abonnement à la newsletter réussi !',
+    error: 'Une erreur est survenue, veuillez réessayer.',
+  },
+  ru: {
+    title: 'Подпишитесь на нашу рассылку',
+    placeholder: 'Ваш email',
+    button: 'Подписаться',
+    success: 'Вы успешно подписались на рассылку!',
+    error: 'Произошла ошибка, попробуйте еще раз.',
+  },
+  ar: {
+    title: 'اشترك في نشرتنا الإخبارية',
+    placeholder: 'بريدك الإلكتروني',
+    button: 'اشترك',
+    success: 'تم الاشتراك في النشرة الإخبارية بنجاح!',
+    error: 'حدث خطأ، يرجى المحاولة مرة أخرى.',
+  },
+}
+
 export function Footer() {
   const params = useParams()
   const currentLang = (params?.lang as keyof typeof footerContent) || 'en'
   const content = footerContent[currentLang] || footerContent.en
+  const newsletter = newsletterContent[currentLang] || newsletterContent.en
   
   const bg = useColorModeValue('gray.50', 'gray.900')
   const borderColor = useColorModeValue('gray.200', 'gray.700')
+  const toast = useToast()
+
+  const [email, setEmail] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [userCountry, setUserCountry] = useState('')
+
+  useEffect(() => {
+    // Tarayıcı konum bilgisini al
+    fetch('https://ipapi.co/json/')
+      .then(res => res.json())
+      .then(data => {
+        setUserCountry(data.country_name)
+      })
+      .catch(err => {
+        console.error('Konum bilgisi alınamadı:', err)
+      })
+  }, [])
+
+  const subscribeToNewsletter = async (email: string, country: string) => {
+    try {
+      setLoading(true)
+      const response = await fetch(`${API_URL}/newsletter/subscribe`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ 
+          email, 
+          country,
+          language: currentLang,
+          timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+          userAgent: navigator.userAgent,
+        })
+      })
+
+      const data = await response.json()
+      
+      if (response.ok) {
+        toast({
+          title: newsletter.success,
+          status: 'success',
+          duration: 5000,
+          isClosable: true,
+        })
+        setEmail('')
+      } else {
+        throw new Error(data.message)
+      }
+    } catch (error) {
+      console.error('Newsletter subscription error:', error)
+      toast({
+        title: newsletter.error,
+        status: 'error',
+        duration: 5000,
+        isClosable: true,
+      })
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    if (email) {
+      subscribeToNewsletter(email, userCountry)
+    }
+  }
 
   return (
     <Box bg={bg} borderTop="1px" borderColor={borderColor}>
@@ -200,6 +319,32 @@ export function Footer() {
             </ChakraLink>
             <Text>{content.contact.phone}</Text>
           </Stack>
+
+          <VStack align={currentLang === 'ar' ? 'flex-end' : 'flex-start'} spacing={4}>
+            <Text fontWeight="bold">
+              {newsletter.title}
+            </Text>
+            <form onSubmit={handleSubmit} style={{ width: '100%' }}>
+              <Stack spacing={2} width="100%">
+                <Input
+                  placeholder={newsletter.placeholder}
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  type="email"
+                  required
+                  dir={currentLang === 'ar' ? 'rtl' : 'ltr'}
+                />
+                <Button
+                  type="submit"
+                  colorScheme="blue"
+                  isLoading={loading}
+                  width="100%"
+                >
+                  {newsletter.button}
+                </Button>
+              </Stack>
+            </form>
+          </VStack>
         </SimpleGrid>
 
         <Box pt={10}>
