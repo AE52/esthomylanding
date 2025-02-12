@@ -299,7 +299,7 @@ La Turquie vise à renforcer sa position de leader dans le tourisme médical en 
   },
   {
     id: 2,
-    image: 'https://images.unsplash.com/photo-1631815589968-fdb09a223b1e?q=80&w=1000&auto=format&fit=crop',
+    image: 'https://www.clinicplast.com/wp-content/uploads/2021/09/sac1.jpg',
     date: '2024-03-10',
     slugs: {
       tr: 'modern-sac-ekimi-teknikleri',
@@ -438,7 +438,7 @@ Modern hair transplant techniques offer natural and permanent results to restore
   },
   {
     id: 3,
-    image: 'https://images.unsplash.com/photo-1609840114035-3c981b782dfe?q=80&w=1000&auto=format&fit=crop',
+    image: 'https://www.aliadent.com/wp-content/uploads/2023/12/dental-implant-uygulamalari.jpg',
     date: '2024-03-05',
     slugs: {
       tr: 'dis-implant-tedavisi-rehberi',
