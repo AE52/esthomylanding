@@ -99,24 +99,13 @@ export default function Home() {
     <Box>
       {/* Hero Section */}
       <Box 
-        bgGradient="linear(to-r, blue.800, purple.800)"
+        bgGradient="linear(to-r, brand.secondary.800, brand.primary.800)"
         color="white"
         py={20}
         position="relative"
         overflow="hidden"
       >
         <Container maxW="container.xl">
-          {/* Logo ekle */}
-          <Box mb={8} textAlign="center">
-            <Image 
-              src="/images/logo.png" 
-              alt="Esthomy Logo"
-              width={180}
-              height={60}
-              style={{ objectFit: 'contain' }}
-            />
-          </Box>
-          
           <VStack spacing={6} textAlign="center">
             <Heading 
               as="h1" 
@@ -155,13 +144,12 @@ export default function Home() {
               as="h2" 
               size="xl" 
               mb={4}
-              color="blue.800"
               position="relative"
               _after={{
                 content: '""',
                 width: '60px',
                 height: '3px',
-                bg: 'purple.500',
+                bg: 'brand.primary.500',
                 position: 'absolute',
                 bottom: '-10px',
                 left: '50%',
@@ -205,13 +193,12 @@ export default function Home() {
             <Heading 
               as="h2" 
               size="xl"
-              color="blue.800"
               position="relative"
               _after={{
                 content: '""',
                 width: '60px',
                 height: '3px',
-                bg: 'purple.500',
+                bg: 'brand.primary.500',
                 position: 'absolute',
                 bottom: '-10px',
                 left: '50%',

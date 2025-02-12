@@ -55,31 +55,43 @@ const breadcrumbText = {
 
 const detailsText = {
   tr: {
+    home: 'Ana Sayfa',
+    treatments: 'Tedaviler',
     details: 'Detaylar',
     benefits: 'Faydalar',
     bookAppointment: 'Randevu Al'
   },
   en: {
+    home: 'Home',
+    treatments: 'Treatments',
     details: 'Details',
     benefits: 'Benefits',
     bookAppointment: 'Book Appointment'
   },
   de: {
+    home: 'Startseite',
+    treatments: 'Behandlungen',
     details: 'Details',
     benefits: 'Vorteile',
     bookAppointment: 'Termin Vereinbaren'
   },
   fr: {
+    home: 'Accueil',
+    treatments: 'Traitements',
     details: 'Détails',
     benefits: 'Avantages',
     bookAppointment: 'Prendre Rendez-vous'
   },
   ru: {
+    home: 'Главная',
+    treatments: 'Процедуры',
     details: 'Подробности',
     benefits: 'Преимущества',
     bookAppointment: 'Записаться'
   },
   ar: {
+    home: 'الرئيسية',
+    treatments: 'العلاجات',
     details: 'التفاصيل',
     benefits: 'الفوائد',
     bookAppointment: 'حجز موعد'
@@ -89,51 +101,27 @@ const detailsText = {
 export default function TreatmentDetail() {
   const router = useRouter()
   const params = useParams()
-  const lang = params.lang as keyof typeof breadcrumbText
-  const id = params.id as string
-  
-  const [treatment, setTreatment] = React.useState<Treatment | null>(null)
-  const [loading, setLoading] = React.useState(true)
+  const lang = (params?.lang as keyof typeof detailsText) || 'en'
+  const id = params?.id as string
+  const text = detailsText[lang] || detailsText.en
 
-  React.useEffect(() => {
-    const foundTreatment = treatments.find(t => t.id === Number(id))
-    if (foundTreatment) {
-      setTreatment(foundTreatment)
-      setLoading(false)
-    } else {
-      setLoading(false)
-      console.error('Treatment not found')
-    }
-  }, [id])
-
-  if (loading) {
-    return (
-      <Container maxW="container.xl" py={10}>
-        <Text>Yükleniyor...</Text>
-      </Container>
-    )
-  }
-
+  // ID'ye göre tedaviyi bul
+  const treatment = treatments.find(t => t.id.toString() === id)
   if (!treatment) {
     return (
       <Container maxW="container.xl" py={10}>
-        <Text>Tedavi bulunamadı.</Text>
+        <Text>Treatment not found.</Text>
       </Container>
     )
   }
 
-  const translation = treatment.translations[lang]
-  const text = breadcrumbText[lang]
-  const labels = detailsText[lang]
-
-  const truncatedTitle = translation.title.split(' ').slice(0, 2).join(' ') + (translation.title.split(' ').length > 2 ? '...' : '')
+  const translation = treatment.translations[lang] || treatment.translations.en
+  const truncatedTitle = translation.title.length > 50 
+    ? translation.title.substring(0, 47) + '...' 
+    : translation.title
 
   const handleNavigate = (path: string) => {
     router.push(path)
-  }
-
-  const handleAppointment = () => {
-    window.open(`https://client.esthomy.com/appointmentRequest/${id}`, '_blank')
   }
 
   return (
@@ -155,9 +143,9 @@ export default function TreatmentDetail() {
         >
           <BreadcrumbItem>
             <Button
-              variant="link"
+              variant="ghost"
               onClick={() => handleNavigate(`/${lang}`)}
-              color="blue.500"
+              color="brand.primary.500"
               fontWeight="normal"
             >
               {text.home}
@@ -166,9 +154,9 @@ export default function TreatmentDetail() {
 
           <BreadcrumbItem>
             <Button
-              variant="link"
+              variant="ghost"
               onClick={() => handleNavigate(`/${lang}/treatments`)}
-              color="blue.500"
+              color="brand.primary.500"
               fontWeight="normal"
             >
               {text.treatments}
@@ -180,162 +168,76 @@ export default function TreatmentDetail() {
           </BreadcrumbItem>
         </Breadcrumb>
 
-        <Box
-          borderRadius="3xl"
-          overflow="hidden"
-          bg="white"
-          shadow="2xl"
-          position="relative"
-        >
-          <Box 
-            height="500px" 
-            position="relative"
-            overflow="hidden"
-          >
+        <Box bg="white" borderRadius="xl" overflow="hidden" boxShadow="xl">
+          {/* Hero Image */}
+          <Box position="relative" h="400px">
             <Image
               src={treatment.image}
               alt={translation.title}
-              style={{ 
-                objectFit: 'cover',
-                objectPosition: 'center top',
-                width: '100%',
-                height: '100%'
-              }}
+              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
             />
             <Box
               position="absolute"
-              bottom={0}
+              top={0}
               left={0}
               right={0}
-              height="120px"
-              bgGradient="linear(to-t, blackAlpha.700, transparent)"
-            />
-          </Box>
-          
-          <VStack 
-            spacing={8} 
-            p={12} 
-            align="start"
-            bg="white"
-          >
-            <Heading 
-              as="h1" 
-              size="2xl" 
-              color="blue.800"
-              fontWeight="bold"
-              lineHeight="shorter"
+              bottom={0}
+              bg="rgba(0,0,0,0.4)"
+              display="flex"
+              alignItems="center"
+              justifyContent="center"
             >
-              {translation.title}
-            </Heading>
-            
-            <Text 
-              fontSize="xl" 
-              color="gray.600"
-              lineHeight="tall"
-            >
-              {translation.description}
-            </Text>
-
-            <Box width="full">
-              <Heading 
-                as="h2" 
-                size="xl" 
-                mb={6}
-                color="blue.800"
-                position="relative"
-                _after={{
-                  content: '""',
-                  width: '50px',
-                  height: '3px',
-                  bg: 'purple.500',
-                  position: 'absolute',
-                  bottom: '-8px',
-                  left: 0
-                }}
-              >
-                {labels.details}
-              </Heading>
-              <Text 
-                fontSize="lg" 
-                color="gray.600"
-                whiteSpace="pre-line"
-                lineHeight="tall"
-              >
-                {translation.details}
-              </Text>
-            </Box>
-
-            {translation.benefits && translation.benefits.length > 0 && (
-              <Box width="full">
-                <Heading 
-                  as="h2" 
-                  size="xl" 
-                  mb={6}
-                  color="blue.800"
-                  position="relative"
-                  _after={{
-                    content: '""',
-                    width: '50px',
-                    height: '3px',
-                    bg: 'purple.500',
-                    position: 'absolute',
-                    bottom: '-8px',
-                    left: 0
-                  }}
-                >
-                  {labels.benefits}
+              <VStack spacing={4} color="white" textAlign="center" px={4}>
+                <Heading as="h1" size="2xl" variant="hero">
+                  {translation.title}
                 </Heading>
-                <SimpleGrid columns={{ base: 1, md: 2 }} spacing={6}>
-                  {translation.benefits.map((benefit, index) => (
-                    <HStack 
-                      key={index} 
-                      spacing={4}
-                      p={6}
-                      bg="blue.50"
-                      borderRadius="xl"
-                      alignItems="flex-start"
-                    >
-                      <Box
-                        flexShrink={0}
-                        bg="purple.500"
-                        color="white"
-                        p={2}
-                        borderRadius="md"
-                      >
-                        <CheckCircleIcon boxSize={6} />
-                      </Box>
-                      <Text 
-                        fontSize="lg" 
-                        color="gray.700"
-                        fontWeight="medium"
-                      >
-                        {benefit}
-                      </Text>
-                    </HStack>
-                  ))}
-                </SimpleGrid>
-              </Box>
-            )}
+              </VStack>
+            </Box>
+          </Box>
 
-            <HStack spacing={6} mt={8} width="full" justifyContent="center">
-              <Button 
-                colorScheme="purple" 
+          {/* Content */}
+          <Box p={8}>
+            <SimpleGrid columns={{ base: 1, lg: 2 }} spacing={10}>
+              {/* Details Section */}
+              <Box>
+                <Heading as="h2" size="lg" mb={6} color="brand.secondary.700">
+                  {text.details}
+                </Heading>
+                <Text whiteSpace="pre-wrap" fontSize="lg">
+                  {translation.description}
+                </Text>
+              </Box>
+
+              {/* Benefits Section */}
+              <Box>
+                <Heading as="h2" size="lg" mb={6} color="brand.secondary.700">
+                  {text.benefits}
+                </Heading>
+                <List spacing={4}>
+                  {translation.benefits.map((benefit, index) => (
+                    <ListItem key={index} display="flex" alignItems="center">
+                      <ListIcon as={CheckCircleIcon} color="brand.primary.500" boxSize={5} />
+                      <Text fontSize="lg">{benefit}</Text>
+                    </ListItem>
+                  ))}
+                </List>
+              </Box>
+            </SimpleGrid>
+
+            {/* CTA Button */}
+            <Box mt={12} textAlign="center">
+              <Button
                 size="lg"
-                onClick={handleAppointment}
+                variant="solid"
+                leftIcon={<FaCheckCircle />}
+                onClick={() => handleNavigate(`/${lang}/contact`)}
                 px={12}
-                height="60px"
-                fontSize="xl"
-                borderRadius="xl"
-                rightIcon={<span>→</span>}
-                _hover={{
-                  transform: 'translateY(-2px)',
-                  shadow: 'lg'
-                }}
+                py={7}
               >
-                {labels.bookAppointment}
+                {text.bookAppointment}
               </Button>
-            </HStack>
-          </VStack>
+            </Box>
+          </Box>
         </Box>
       </Container>
     </>

@@ -12,16 +12,15 @@ import {
   Icon,
   Breadcrumb,
   BreadcrumbItem,
-  BreadcrumbLink,
+  Button,
 } from '@chakra-ui/react'
 import { ChevronRightIcon } from '@chakra-ui/icons'
-import { useParams } from 'next/navigation'
+import { useParams, useRouter } from 'next/navigation'
 import { blogPosts } from '@/data/blog'
 import type { BlogPost } from '@/data/blog'
 import { FaCalendar } from 'react-icons/fa'
-import Link from 'next/link'
-import { ScrollToTop } from '@/app/components/ScrollToTop'
 import { BackButton } from '@/app/components/BackButton'
+import { ScrollToTop } from '@/app/components/ScrollToTop'
 
 // Dil bazlı içerik
 const content = {
@@ -71,6 +70,7 @@ const content = {
 
 export default function BlogPost() {
   const params = useParams()
+  const router = useRouter()
   const lang = (params?.lang as keyof typeof content) || 'en'
   const slug = params?.slug as string
   const pageContent = content[lang] || content.en
@@ -87,6 +87,10 @@ export default function BlogPost() {
   }
 
   const translation = currentPost.translations[lang] || currentPost.translations.en
+
+  const handleNavigate = (path: string) => {
+    router.push(path)
+  }
 
   return (
     <>
@@ -106,17 +110,17 @@ export default function BlogPost() {
           left={0}
           right={0}
           bottom={0}
-          bg="rgba(0,0,0,0.5)"
+          bg="rgba(0,0,0,0.4)"
           display="flex"
           alignItems="center"
           justifyContent="center"
         >
           <Container maxW="container.xl">
             <VStack spacing={4} color="white" textAlign="center">
-              <Heading as="h1" size="2xl">
+              <Heading as="h1" size="2xl" variant="hero">
                 {translation.title}
               </Heading>
-              <HStack spacing={2}>
+              <HStack spacing={2} color="custom.heroSubtext">
                 <Icon as={FaCalendar} />
                 <Text>{new Date(currentPost.date).toLocaleDateString(lang)}</Text>
               </HStack>
@@ -126,38 +130,51 @@ export default function BlogPost() {
       </Box>
 
       {/* Breadcrumb */}
-      <Container maxW="container.xl" py={4}>
-        <Breadcrumb>
+      <Container maxW="container.xl" py={8}>
+        <Breadcrumb
+          spacing="8px"
+          separator={<ChevronRightIcon color="gray.500" />}
+          mb={8}
+          fontSize="sm"
+        >
           <BreadcrumbItem>
-            <BreadcrumbLink as={Link} href={`/${lang}`}>
+            <Button
+              variant="ghost"
+              onClick={() => handleNavigate(`/${lang}`)}
+              color="brand.primary.500"
+              fontWeight="normal"
+            >
               {pageContent.breadcrumb.home}
-            </BreadcrumbLink>
+            </Button>
           </BreadcrumbItem>
+
           <BreadcrumbItem>
-            <BreadcrumbLink as={Link} href={`/${lang}/blog`}>
+            <Button
+              variant="ghost"
+              onClick={() => handleNavigate(`/${lang}/blog`)}
+              color="brand.primary.500"
+              fontWeight="normal"
+            >
               {pageContent.breadcrumb.blog}
-            </BreadcrumbLink>
+            </Button>
           </BreadcrumbItem>
+
           <BreadcrumbItem isCurrentPage>
-            <Text>{translation.title}</Text>
+            <Text color="gray.500">{translation.title}</Text>
           </BreadcrumbItem>
         </Breadcrumb>
-      </Container>
 
-      {/* İçerik */}
-      <Container maxW="container.xl" py={8}>
-        <VStack spacing={8} align="stretch">
-          <Text fontSize="xl" color="gray.600">
-            {translation.excerpt}
-          </Text>
-          <Box>
-            {translation.content.split('\n\n').map((paragraph: string, index: number) => (
-              <Text key={index} mb={4}>
-                {paragraph}
-              </Text>
-            ))}
-          </Box>
-        </VStack>
+        {/* Content */}
+        <Box 
+          bg="white" 
+          borderRadius="xl" 
+          p={8} 
+          boxShadow="xl"
+          fontSize="lg"
+          lineHeight="tall"
+        >
+          <div dangerouslySetInnerHTML={{ __html: translation.content }} />
+        </Box>
       </Container>
     </>
   )

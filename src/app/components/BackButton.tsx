@@ -28,22 +28,31 @@ export function BackButton({ lang }: BackButtonProps) {
     >
       <Button
         leftIcon={<FaArrowLeft />}
-        colorScheme="purple"
-        variant="solid"
+        variant="outline"
         onClick={() => router.back()}
         position="fixed"
-        top="80px"
-        left="20px"
+        top="100px"
+        left="40px"
         zIndex="999"
-        borderRadius="full"
-        boxShadow="lg"
+        boxShadow="xl"
+        px={6}
+        py={4}
+        fontSize="md"
+        bg="white"
+        borderWidth="2px"
         _hover={{
-          transform: 'translateY(-2px)',
-          boxShadow: 'xl'
+          transform: 'translateY(-2px) scale(1.02)',
+          boxShadow: '2xl',
+          bg: 'brand.primary.50',
+          borderColor: 'brand.primary.300'
         }}
-        transition="all 0.2s"
+        _active={{
+          transform: 'translateY(0)',
+          bg: 'brand.primary.100'
+        }}
+        transition="all 0.3s cubic-bezier(0.4, 0, 0.2, 1)"
       >
-        {lang === 'tr' ? 'Geri' : 'Back'}
+        {lang === 'tr' ? 'Geri Dön' : 'Go Back'}
       </Button>
     </Tooltip>
   )
