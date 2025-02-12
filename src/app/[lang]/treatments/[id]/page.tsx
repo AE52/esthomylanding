@@ -15,10 +15,16 @@ import {
   HStack,
   Breadcrumb,
   BreadcrumbItem,
+  SimpleGrid,
 } from '@chakra-ui/react'
 import { CheckCircleIcon, ChevronRightIcon } from '@chakra-ui/icons'
 import { useRouter, useParams } from 'next/navigation'
-import { Treatment, ParsedTreatment } from '@/types'
+import { Treatment } from '@/data/treatments'
+import { treatments } from '@/data/treatments'
+import { FaCheckCircle } from 'react-icons/fa'
+import Link from 'next/link'
+import { ScrollToTop } from '@/app/components/ScrollToTop'
+import { BackButton } from '@/app/components/BackButton'
 
 const breadcrumbText = {
   tr: {
@@ -86,30 +92,18 @@ export default function TreatmentDetail() {
   const lang = params.lang as keyof typeof breadcrumbText
   const id = params.id as string
   
-  const [treatment, setTreatment] = React.useState<ParsedTreatment | null>(null)
+  const [treatment, setTreatment] = React.useState<Treatment | null>(null)
   const [loading, setLoading] = React.useState(true)
 
   React.useEffect(() => {
-    const fetchTreatment = async () => {
-      try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/treatments/${id}`)
-        if (!res.ok) throw new Error('Failed to fetch treatment')
-        const data: Treatment = await res.json()
-        
-        const parsedTreatment: ParsedTreatment = {
-          ...data,
-          translations: JSON.parse(data.translations)
-        }
-        
-        setTreatment(parsedTreatment)
-      } catch (error) {
-        console.error('Error fetching treatment:', error)
-      } finally {
-        setLoading(false)
-      }
+    const foundTreatment = treatments.find(t => t.id === Number(id))
+    if (foundTreatment) {
+      setTreatment(foundTreatment)
+      setLoading(false)
+    } else {
+      setLoading(false)
+      console.error('Treatment not found')
     }
-
-    fetchTreatment()
   }, [id])
 
   if (loading) {
@@ -143,99 +137,207 @@ export default function TreatmentDetail() {
   }
 
   return (
-    <Container maxW="container.xl" py={10}>
-      <Breadcrumb
-        spacing="8px"
-        separator={<ChevronRightIcon color="gray.500" />}
-        mb={8}
-      >
-        <BreadcrumbItem>
-          <Button
-            variant="link"
-            onClick={() => handleNavigate(`/${lang}`)}
-            color="blue.500"
-            fontWeight="normal"
-          >
-            {text.home}
-          </Button>
-        </BreadcrumbItem>
-
-        <BreadcrumbItem>
-          <Button
-            variant="link"
-            onClick={() => handleNavigate(`/${lang}/treatments`)}
-            color="blue.500"
-            fontWeight="normal"
-          >
-            {text.treatments}
-          </Button>
-        </BreadcrumbItem>
-
-        <BreadcrumbItem isCurrentPage>
-          <Text color="gray.500">{truncatedTitle}</Text>
-        </BreadcrumbItem>
-      </Breadcrumb>
-
-      <Box
-        borderWidth="1px"
-        borderRadius="lg"
-        overflow="hidden"
-        bg="white"
-        shadow="xl"
-      >
-        <Image
-          src={treatment.imageUrl}
-          alt={translation.title}
-          width="100%"
-          height="400px"
-          objectFit="cover"
-        />
-        
-        <VStack spacing={6} p={8} align="start">
-          <Heading as="h1" size="2xl">
-            {translation.title}
-          </Heading>
-          
-          <Text fontSize="xl" color="gray.600">
-            {translation.description}
-          </Text>
-
-          <Box>
-            <Heading as="h2" size="lg" mb={4}>
-              {labels.details}
-            </Heading>
-            <Text>
-              {translation.details}
-            </Text>
-          </Box>
-
-          {translation.benefits && translation.benefits.length > 0 && (
-            <Box>
-              <Heading as="h2" size="lg" mb={4}>
-                {labels.benefits}
-              </Heading>
-              <List spacing={3}>
-                {translation.benefits.map((benefit, index) => (
-                  <ListItem key={index} display="flex" alignItems="center">
-                    <ListIcon as={CheckCircleIcon} color="green.500" />
-                    {benefit}
-                  </ListItem>
-                ))}
-              </List>
-            </Box>
-          )}
-
-          <HStack spacing={4} mt={4}>
-            <Button 
-              colorScheme="blue" 
-              size="lg"
-              onClick={handleAppointment}
-            >
-              {labels.bookAppointment}
-            </Button>
-          </HStack>
-        </VStack>
+    <>
+      <Box position="fixed" top="80px" left={4} zIndex={999}>
+        <BackButton lang={lang} />
       </Box>
-    </Container>
+      
+      <Box position="fixed" bottom="80px" right={4} zIndex={999}>
+        <ScrollToTop />
+      </Box>
+      
+      <Container maxW="container.xl" py={10} mt={24}>
+        <Breadcrumb
+          spacing="8px"
+          separator={<ChevronRightIcon color="gray.500" />}
+          mb={8}
+          fontSize="sm"
+        >
+          <BreadcrumbItem>
+            <Button
+              variant="link"
+              onClick={() => handleNavigate(`/${lang}`)}
+              color="blue.500"
+              fontWeight="normal"
+            >
+              {text.home}
+            </Button>
+          </BreadcrumbItem>
+
+          <BreadcrumbItem>
+            <Button
+              variant="link"
+              onClick={() => handleNavigate(`/${lang}/treatments`)}
+              color="blue.500"
+              fontWeight="normal"
+            >
+              {text.treatments}
+            </Button>
+          </BreadcrumbItem>
+
+          <BreadcrumbItem isCurrentPage>
+            <Text color="gray.500">{truncatedTitle}</Text>
+          </BreadcrumbItem>
+        </Breadcrumb>
+
+        <Box
+          borderRadius="3xl"
+          overflow="hidden"
+          bg="white"
+          shadow="2xl"
+          position="relative"
+        >
+          <Box 
+            height="500px" 
+            position="relative"
+            overflow="hidden"
+          >
+            <Image
+              src={treatment.image}
+              alt={translation.title}
+              style={{ 
+                objectFit: 'cover',
+                objectPosition: 'center top',
+                width: '100%',
+                height: '100%'
+              }}
+            />
+            <Box
+              position="absolute"
+              bottom={0}
+              left={0}
+              right={0}
+              height="120px"
+              bgGradient="linear(to-t, blackAlpha.700, transparent)"
+            />
+          </Box>
+          
+          <VStack 
+            spacing={8} 
+            p={12} 
+            align="start"
+            bg="white"
+          >
+            <Heading 
+              as="h1" 
+              size="2xl" 
+              color="blue.800"
+              fontWeight="bold"
+              lineHeight="shorter"
+            >
+              {translation.title}
+            </Heading>
+            
+            <Text 
+              fontSize="xl" 
+              color="gray.600"
+              lineHeight="tall"
+            >
+              {translation.description}
+            </Text>
+
+            <Box width="full">
+              <Heading 
+                as="h2" 
+                size="xl" 
+                mb={6}
+                color="blue.800"
+                position="relative"
+                _after={{
+                  content: '""',
+                  width: '50px',
+                  height: '3px',
+                  bg: 'purple.500',
+                  position: 'absolute',
+                  bottom: '-8px',
+                  left: 0
+                }}
+              >
+                {labels.details}
+              </Heading>
+              <Text 
+                fontSize="lg" 
+                color="gray.600"
+                whiteSpace="pre-line"
+                lineHeight="tall"
+              >
+                {translation.details}
+              </Text>
+            </Box>
+
+            {translation.benefits && translation.benefits.length > 0 && (
+              <Box width="full">
+                <Heading 
+                  as="h2" 
+                  size="xl" 
+                  mb={6}
+                  color="blue.800"
+                  position="relative"
+                  _after={{
+                    content: '""',
+                    width: '50px',
+                    height: '3px',
+                    bg: 'purple.500',
+                    position: 'absolute',
+                    bottom: '-8px',
+                    left: 0
+                  }}
+                >
+                  {labels.benefits}
+                </Heading>
+                <SimpleGrid columns={{ base: 1, md: 2 }} spacing={6}>
+                  {translation.benefits.map((benefit, index) => (
+                    <HStack 
+                      key={index} 
+                      spacing={4}
+                      p={6}
+                      bg="blue.50"
+                      borderRadius="xl"
+                      alignItems="flex-start"
+                    >
+                      <Box
+                        flexShrink={0}
+                        bg="purple.500"
+                        color="white"
+                        p={2}
+                        borderRadius="md"
+                      >
+                        <CheckCircleIcon boxSize={6} />
+                      </Box>
+                      <Text 
+                        fontSize="lg" 
+                        color="gray.700"
+                        fontWeight="medium"
+                      >
+                        {benefit}
+                      </Text>
+                    </HStack>
+                  ))}
+                </SimpleGrid>
+              </Box>
+            )}
+
+            <HStack spacing={6} mt={8} width="full" justifyContent="center">
+              <Button 
+                colorScheme="purple" 
+                size="lg"
+                onClick={handleAppointment}
+                px={12}
+                height="60px"
+                fontSize="xl"
+                borderRadius="xl"
+                rightIcon={<span>→</span>}
+                _hover={{
+                  transform: 'translateY(-2px)',
+                  shadow: 'lg'
+                }}
+              >
+                {labels.bookAppointment}
+              </Button>
+            </HStack>
+          </VStack>
+        </Box>
+      </Container>
+    </>
   )
 } 

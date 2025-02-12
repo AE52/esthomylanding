@@ -9,37 +9,14 @@ import {
   Text,
 } from '@chakra-ui/react'
 import { TreatmentCard } from '@/app/components/TreatmentCard'
-import { Treatment, ParsedTreatment } from '@/types'
+import { treatments } from '@/data/treatments'
 
 export default function TreatmentsPage({ params }: { params: { lang: string } }) {
-  const [treatments, setTreatments] = React.useState<ParsedTreatment[]>([])
-  const [loading, setLoading] = React.useState(true)
+  const [loading, setLoading] = React.useState(false)
   const [error, setError] = React.useState(false)
 
-  React.useEffect(() => {
-    const fetchTreatments = async () => {
-      try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/treatments`)
-        if (!res.ok) throw new Error('Failed to fetch treatments')
-        const data: Treatment[] = await res.json()
-        
-        // Parse JSON strings in translations
-        const parsedTreatments: ParsedTreatment[] = data.map(treatment => ({
-          ...treatment,
-          translations: JSON.parse(treatment.translations)
-        }))
-        
-        setTreatments(parsedTreatments)
-      } catch (error) {
-        console.error('Error fetching treatments:', error)
-        setError(true)
-      } finally {
-        setLoading(false)
-      }
-    }
-
-    fetchTreatments()
-  }, [])
+  // API çağrısını kaldırıp direkt mock datayı kullanıyoruz
+  const parsedTreatments = treatments
 
   if (loading) {
     return (
@@ -91,7 +68,7 @@ export default function TreatmentsPage({ params }: { params: { lang: string } })
            'Quality treatment services in Turkey\'s best healthcare centers'}
         </Text>
         <SimpleGrid columns={{ base: 1, md: 2, lg: 4 }} spacing={8}>
-          {treatments.map((treatment) => {
+          {parsedTreatments.map((treatment) => {
             const translation = treatment.translations[params.lang] || treatment.translations.en
             return (
               <TreatmentCard
@@ -99,7 +76,7 @@ export default function TreatmentsPage({ params }: { params: { lang: string } })
                 id={treatment.id}
                 title={translation?.title || ''}
                 description={translation?.description || ''}
-                image={treatment.imageUrl}
+                image={treatment.image}
               />
             )
           })}

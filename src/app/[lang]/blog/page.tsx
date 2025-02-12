@@ -51,7 +51,11 @@ const blogContent = {
 
 export default function BlogPage({ params }: { params: { lang: keyof typeof blogContent } }) {
   const content = blogContent[params.lang] || blogContent.en
-  const posts = blogPosts[params.lang] || blogPosts.en
+  
+  // Blog yazılarını tarihe göre sırala
+  const sortedPosts = [...blogPosts].sort((a, b) => 
+    new Date(b.date).getTime() - new Date(a.date).getTime()
+  )
 
   return (
     <Container maxW="container.xl" py={10}>
@@ -65,43 +69,46 @@ export default function BlogPage({ params }: { params: { lang: keyof typeof blog
       </Box>
 
       <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={8}>
-        {Object.entries(posts).map(([slug, post]) => (
-          <LinkBox 
-            key={slug} 
-            as="article" 
-            borderWidth="1px" 
-            borderRadius="lg" 
-            overflow="hidden"
-            _hover={{ transform: 'translateY(-4px)', shadow: 'lg' }}
-            transition="all 0.2s"
-          >
-            <AspectRatio ratio={16/9}>
-              <Box position="relative">
-                <Image
-                  src={post.image}
-                  alt={post.title}
-                  fill
-                  style={{ objectFit: 'cover' }}
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                />
-              </Box>
-            </AspectRatio>
+        {sortedPosts.map((post) => {
+          const translation = post.translations[params.lang] || post.translations.en
+          return (
+            <LinkBox 
+              key={post.id} 
+              as="article" 
+              borderWidth="1px" 
+              borderRadius="lg" 
+              overflow="hidden"
+              _hover={{ transform: 'translateY(-4px)', shadow: 'lg' }}
+              transition="all 0.2s"
+            >
+              <AspectRatio ratio={16/9}>
+                <Box position="relative">
+                  <Image
+                    src={post.image}
+                    alt={translation.title}
+                    fill
+                    style={{ objectFit: 'cover' }}
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                  />
+                </Box>
+              </AspectRatio>
 
-            <Stack p={6} spacing={3}>
-              <Heading as="h3" size="md">
-                <LinkOverlay as={Link} href={`/${params.lang}/blog/${slug}`}>
-                  {post.title}
-                </LinkOverlay>
-              </Heading>
-              <Text color="gray.600" noOfLines={3}>
-                {post.content.split('\n\n')[0]}
-              </Text>
-              <Text color="gray.500" fontSize="sm">
-                {post.date}
-              </Text>
-            </Stack>
-          </LinkBox>
-        ))}
+              <Stack p={6} spacing={3}>
+                <Heading as="h3" size="md">
+                  <LinkOverlay as={Link} href={`/${params.lang}/blog/${post.slugs[params.lang]}`}>
+                    {translation.title}
+                  </LinkOverlay>
+                </Heading>
+                <Text color="gray.600" noOfLines={3}>
+                  {translation.excerpt}
+                </Text>
+                <Text color="gray.500" fontSize="sm">
+                  {new Date(post.date).toLocaleDateString(params.lang)}
+                </Text>
+              </Stack>
+            </LinkBox>
+          )
+        })}
       </SimpleGrid>
     </Container>
   )

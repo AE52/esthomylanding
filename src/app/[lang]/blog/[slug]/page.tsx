@@ -6,116 +6,159 @@ import {
   Container,
   Heading,
   Text,
-  Stack,
-  Button,
+  Image,
+  VStack,
+  HStack,
   Icon,
-  AspectRatio,
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
 } from '@chakra-ui/react'
-import { MdArrowBack, MdDateRange } from 'react-icons/md'
-import { useRouter } from 'next/navigation'
-import Image from 'next/image'
+import { ChevronRightIcon } from '@chakra-ui/icons'
+import { useParams } from 'next/navigation'
 import { blogPosts } from '@/data/blog'
+import type { BlogPost } from '@/data/blog'
+import { FaCalendar } from 'react-icons/fa'
+import Link from 'next/link'
+import { ScrollToTop } from '@/app/components/ScrollToTop'
+import { BackButton } from '@/app/components/BackButton'
 
-const blogDetailContent = {
+// Dil bazlı içerik
+const content = {
   tr: {
-    backToList: 'Blog Listesine Dön',
-    date: 'Tarih',
-    notFound: 'Blog yazısı bulunamadı.',
+    breadcrumb: {
+      home: 'Ana Sayfa',
+      blog: 'Blog'
+    },
+    notFound: 'Blog yazısı bulunamadı.'
   },
   en: {
-    backToList: 'Back to Blog List',
-    date: 'Date',
-    notFound: 'Blog post not found.',
+    breadcrumb: {
+      home: 'Home',
+      blog: 'Blog'
+    },
+    notFound: 'Blog post not found.'
   },
   de: {
-    backToList: 'Zurück zur Blog-Liste',
-    date: 'Datum',
-    notFound: 'Blogbeitrag nicht gefunden.',
+    breadcrumb: {
+      home: 'Startseite',
+      blog: 'Blog'
+    },
+    notFound: 'Blogbeitrag nicht gefunden.'
   },
   fr: {
-    backToList: 'Retour à la Liste du Blog',
-    date: 'Date',
-    notFound: 'Article de blog introuvable.',
+    breadcrumb: {
+      home: 'Accueil',
+      blog: 'Blog'
+    },
+    notFound: 'Article de blog introuvable.'
   },
   ru: {
-    backToList: 'Вернуться к Списку Блога',
-    date: 'Дата',
-    notFound: 'Запись блога не найдена.',
+    breadcrumb: {
+      home: 'Главная',
+      blog: 'Блог'
+    },
+    notFound: 'Запись блога не найдена.'
   },
   ar: {
-    backToList: 'العودة إلى قائمة المدونة',
-    date: 'التاريخ',
-    notFound: 'لم يتم العثور على مقال المدونة.',
+    breadcrumb: {
+      home: 'الرئيسية',
+      blog: 'المدونة'
+    },
+    notFound: 'لم يتم العثور على المقال.'
   }
 }
 
-export default function BlogDetailPage({ 
-  params 
-}: { 
-  params: { 
-    lang: keyof typeof blogDetailContent
-    slug: string 
-  } 
-}) {
-  const router = useRouter()
-  const content = blogDetailContent[params.lang] || blogDetailContent.en
-  const posts = blogPosts[params.lang] || blogPosts.en
-  const post = posts[params.slug]
+export default function BlogPost() {
+  const params = useParams()
+  const lang = (params?.lang as keyof typeof content) || 'en'
+  const slug = params?.slug as string
+  const pageContent = content[lang] || content.en
 
-  if (!post) {
+  // Slug'a göre blog yazısını bul
+  const currentPost: BlogPost | undefined = blogPosts.find(post => post.slugs[lang] === slug)
+
+  if (!currentPost) {
     return (
       <Container maxW="container.xl" py={10}>
-        <Text textAlign="center" fontSize="xl" color="red.500">
-          {content.notFound}
-        </Text>
+        <Text>{pageContent.notFound}</Text>
       </Container>
     )
   }
 
+  const translation = currentPost.translations[lang] || currentPost.translations.en
+
   return (
-    <Box py={10}>
-      <Container maxW="container.xl">
-        <Stack spacing={8}>
-          {/* Back Button */}
-          <Button
-            leftIcon={<Icon as={MdArrowBack} />}
-            variant="ghost"
-            onClick={() => router.push(`/${params.lang}/blog`)}
-            alignSelf="flex-start"
-          >
-            {content.backToList}
-          </Button>
+    <>
+      <BackButton lang={lang} />
+      <ScrollToTop />
+      
+      {/* Hero Section */}
+      <Box position="relative" h="400px">
+        <Image
+          src={currentPost.image}
+          alt={translation.title}
+          style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+        />
+        <Box
+          position="absolute"
+          top={0}
+          left={0}
+          right={0}
+          bottom={0}
+          bg="rgba(0,0,0,0.5)"
+          display="flex"
+          alignItems="center"
+          justifyContent="center"
+        >
+          <Container maxW="container.xl">
+            <VStack spacing={4} color="white" textAlign="center">
+              <Heading as="h1" size="2xl">
+                {translation.title}
+              </Heading>
+              <HStack spacing={2}>
+                <Icon as={FaCalendar} />
+                <Text>{new Date(currentPost.date).toLocaleDateString(lang)}</Text>
+              </HStack>
+            </VStack>
+          </Container>
+        </Box>
+      </Box>
 
-          {/* Blog Post Content */}
-          <Stack spacing={6}>
-            <Heading as="h1" size="2xl">
-              {post.title}
-            </Heading>
-
-            <Stack direction="row" align="center" color="gray.600">
-              <Icon as={MdDateRange} />
-              <Text>{content.date}: {post.date}</Text>
-            </Stack>
-
-            <AspectRatio ratio={16/9} width="100%" maxH="600px">
-              <Box position="relative" width="100%" height="100%">
-                <Image
-                  src={post.image}
-                  alt={post.title}
-                  fill
-                  style={{ objectFit: 'cover' }}
-                  sizes="100vw"
-                  priority
-                />
-              </Box>
-            </AspectRatio>
-
-            <Text fontSize="lg" whiteSpace="pre-wrap">
-              {post.content}
-            </Text>
-          </Stack>
-        </Stack>
+      {/* Breadcrumb */}
+      <Container maxW="container.xl" py={4}>
+        <Breadcrumb>
+          <BreadcrumbItem>
+            <BreadcrumbLink as={Link} href={`/${lang}`}>
+              {pageContent.breadcrumb.home}
+            </BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbItem>
+            <BreadcrumbLink as={Link} href={`/${lang}/blog`}>
+              {pageContent.breadcrumb.blog}
+            </BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbItem isCurrentPage>
+            <Text>{translation.title}</Text>
+          </BreadcrumbItem>
+        </Breadcrumb>
       </Container>
-    </Box>
+
+      {/* İçerik */}
+      <Container maxW="container.xl" py={8}>
+        <VStack spacing={8} align="stretch">
+          <Text fontSize="xl" color="gray.600">
+            {translation.excerpt}
+          </Text>
+          <Box>
+            {translation.content.split('\n\n').map((paragraph: string, index: number) => (
+              <Text key={index} mb={4}>
+                {paragraph}
+              </Text>
+            ))}
+          </Box>
+        </VStack>
+      </Container>
+    </>
   )
 } 
