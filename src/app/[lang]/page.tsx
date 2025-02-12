@@ -255,7 +255,7 @@ export default function Home() {
                             </>
                           )}
                           <Text as="time" dateTime={post.date}>
-                            {new Date(post.date).toLocaleDateString(lang, {
+                            {new Date(post.date).toLocaleDateString(lang === 'tr' ? 'tr-TR' : 'en-US', {
                               year: 'numeric',
                               month: 'long',
                               day: 'numeric'
