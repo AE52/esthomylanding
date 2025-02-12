@@ -13,12 +13,16 @@ import {
   Breadcrumb,
   BreadcrumbItem,
   Button,
+  IconButton,
+  OrderedList,
+  ListItem,
+  UnorderedList,
 } from '@chakra-ui/react'
 import { ChevronRightIcon } from '@chakra-ui/icons'
 import { useParams, useRouter } from 'next/navigation'
 import { blogPosts } from '@/data/blog'
 import type { BlogPost } from '@/data/blog'
-import { FaCalendar } from 'react-icons/fa'
+import { FaCalendar, FaTwitter, FaFacebook, FaLinkedin } from 'react-icons/fa'
 import { BackButton } from '@/app/components/BackButton'
 import { ScrollToTop } from '@/app/components/ScrollToTop'
 
@@ -168,12 +172,188 @@ export default function BlogPost() {
         <Box 
           bg="white" 
           borderRadius="xl" 
-          p={8} 
+          p={{ base: 6, md: 12 }}
           boxShadow="xl"
           fontSize="lg"
           lineHeight="tall"
+          maxW="4xl"
+          mx="auto"
+          className="blog-content"
         >
-          <div dangerouslySetInnerHTML={{ __html: translation.content }} />
+          {/* Meta Bilgileri */}
+          <VStack spacing={6} align="start" mb={10}>
+            <HStack 
+              spacing={4} 
+              color="gray.600"
+              fontSize="md"
+              divider={<Text color="gray.400">•</Text>}
+            >
+              <HStack spacing={2}>
+                <Icon as={FaCalendar} />
+                <Text>
+                  {new Date(currentPost.date).toLocaleDateString(lang, {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                  })}
+                </Text>
+              </HStack>
+              {currentPost.category && (
+                <Text>{currentPost.category}</Text>
+              )}
+            </HStack>
+
+            <Heading 
+              as="h1" 
+              size="2xl" 
+              color="gray.800"
+              lineHeight="1.2"
+              fontWeight="bold"
+            >
+              {translation.title}
+            </Heading>
+
+            <Text 
+              fontSize="xl" 
+              color="gray.600"
+              fontWeight="medium"
+            >
+              {translation.excerpt}
+            </Text>
+          </VStack>
+
+          {/* İçerik */}
+          <Box
+            className="prose prose-lg max-w-none"
+            sx={{
+              'h2, h3, h4': {
+                color: 'gray.800',
+                fontWeight: 'bold',
+                mt: 8,
+                mb: 4,
+              },
+              'h2': {
+                fontSize: '2xl',
+                borderBottom: '2px solid',
+                borderColor: 'gray.200',
+                pb: 2,
+              },
+              'h3': {
+                fontSize: 'xl',
+              },
+              'p': {
+                my: 4,
+                lineHeight: 'tall',
+                color: 'gray.700',
+              },
+              'ul, ol': {
+                my: 4,
+                pl: 6,
+              },
+              'li': {
+                my: 2,
+                color: 'gray.700',
+              },
+              'strong': {
+                color: 'gray.800',
+                fontWeight: 'semibold',
+              },
+              'blockquote': {
+                borderLeft: '4px solid',
+                borderColor: 'brand.primary.500',
+                pl: 4,
+                py: 2,
+                my: 4,
+                bg: 'gray.50',
+                color: 'gray.700',
+                fontStyle: 'italic',
+              },
+            }}
+          >
+            {translation.content.split('\n\n').map((paragraph, index) => {
+              // Başlık kontrolü
+              if (paragraph.startsWith('#')) {
+                const headingMatch = paragraph.match(/^#+/);
+                if (headingMatch) {
+                  const level = Math.min(headingMatch[0].length, 6); // h1-h6 arası sınırlama
+                  const text = paragraph.replace(/^#+\s/, '');
+                  const headingTags = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'] as const;
+                  const headingTag = headingTags[level - 1];
+                  return (
+                    <Heading
+                      key={index}
+                      as={headingTag}
+                      size={level === 1 ? "2xl" : level === 2 ? "xl" : "lg"}
+                      mt={8}
+                      mb={4}
+                    >
+                      {text}
+                    </Heading>
+                  );
+                }
+              }
+              
+              // Liste kontrolü
+              if (paragraph.startsWith('-') || paragraph.match(/^\d+\./)) {
+                const items = paragraph.split('\n');
+                const isOrdered = items[0].match(/^\d+\./);
+                
+                return isOrdered ? (
+                  <OrderedList key={index} spacing={2} mt={4} mb={6}>
+                    {items.map((item, i) => (
+                      <ListItem key={i}>{item.replace(/^\d+\.\s/, '')}</ListItem>
+                    ))}
+                  </OrderedList>
+                ) : (
+                  <UnorderedList key={index} spacing={2} mt={4} mb={6}>
+                    {items.map((item, i) => (
+                      <ListItem key={i}>{item.replace(/^-\s/, '')}</ListItem>
+                    ))}
+                  </UnorderedList>
+                );
+              }
+
+              // Normal paragraf
+              return (
+                <Text key={index} mb={4}>
+                  {paragraph}
+                </Text>
+              );
+            })}
+          </Box>
+
+          {/* Paylaşım Butonları */}
+          <HStack spacing={4} mt={12} pt={6} borderTop="1px" borderColor="gray.200">
+            <Text color="gray.600" fontWeight="medium">
+              {lang === 'tr' ? 'Paylaş:' : 
+               lang === 'en' ? 'Share:' :
+               lang === 'de' ? 'Teilen:' :
+               lang === 'fr' ? 'Partager:' :
+               lang === 'ru' ? 'Поделиться:' :
+               lang === 'ar' ? 'مشاركة:' : 'Share:'}
+            </Text>
+            <IconButton
+              aria-label="Share on Twitter"
+              icon={<Icon as={FaTwitter} />}
+              colorScheme="twitter"
+              variant="ghost"
+              onClick={() => window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(translation.title)}&url=${encodeURIComponent(window.location.href)}`, '_blank')}
+            />
+            <IconButton
+              aria-label="Share on Facebook"
+              icon={<Icon as={FaFacebook} />}
+              colorScheme="facebook"
+              variant="ghost"
+              onClick={() => window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`, '_blank')}
+            />
+            <IconButton
+              aria-label="Share on LinkedIn"
+              icon={<Icon as={FaLinkedin} />}
+              colorScheme="linkedin"
+              variant="ghost"
+              onClick={() => window.open(`https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(window.location.href)}&title=${encodeURIComponent(translation.title)}`, '_blank')}
+            />
+          </HStack>
         </Box>
       </Container>
     </>

@@ -209,6 +209,7 @@ export default function Home() {
                 return (
                   <Box
                     key={post.id}
+                    as="article"
                     bg="white"
                     borderRadius="2xl"
                     overflow="hidden"
@@ -217,24 +218,90 @@ export default function Home() {
                     transition="transform 0.3s"
                     onClick={() => router.push(`/${lang}/blog/${post.slugs[lang]}`)}
                     cursor="pointer"
+                    role="group"
+                    position="relative"
                   >
-                    <Box h="200px" position="relative">
+                    <Box h="250px" position="relative">
                       <Image
                         src={post.image}
                         alt={translation.title}
                         style={{ objectFit: 'cover', width: '100%', height: '100%' }}
+                        loading="lazy"
+                      />
+                      <Box
+                        position="absolute"
+                        bottom={0}
+                        left={0}
+                        right={0}
+                        bg="linear-gradient(to top, rgba(0,0,0,0.7), transparent)"
+                        h="100px"
                       />
                     </Box>
-                    <VStack p={6} spacing={4} align="start">
-                      <Text fontSize="sm" color="gray.500">
-                        {new Date(post.date).toLocaleDateString(lang)}
-                      </Text>
-                      <Heading size="md" color="blue.800">
-                        {translation.title}
-                      </Heading>
-                      <Text noOfLines={3} color="gray.600">
-                        {translation.excerpt}
-                      </Text>
+                    <VStack p={6} spacing={4} align="start" h="300px">
+                      <Box>
+                        <Text 
+                          fontSize="sm" 
+                          color="brand.primary.500" 
+                          fontWeight="semibold"
+                          mb={2}
+                          display="flex"
+                          alignItems="center"
+                          gap={2}
+                        >
+                          {post.category && (
+                            <>
+                              <Text as="span">{post.category}</Text>
+                              <Text as="span" color="gray.400">•</Text>
+                            </>
+                          )}
+                          <Text as="time" dateTime={post.date}>
+                            {new Date(post.date).toLocaleDateString(lang, {
+                              year: 'numeric',
+                              month: 'long',
+                              day: 'numeric'
+                            })}
+                          </Text>
+                        </Text>
+                        <Heading 
+                          as="h3" 
+                          size="md" 
+                          color="gray.800"
+                          _groupHover={{ color: 'brand.primary.500' }}
+                          transition="color 0.2s"
+                          mb={3}
+                          noOfLines={2}
+                        >
+                          {translation.title}
+                        </Heading>
+                        <Text 
+                          noOfLines={4} 
+                          color="gray.600"
+                          fontSize="md"
+                          lineHeight="tall"
+                        >
+                          {translation.excerpt}
+                        </Text>
+                      </Box>
+                      
+                      <Box mt="auto">
+                        <Text 
+                          color="brand.primary.500"
+                          fontWeight="medium"
+                          fontSize="sm"
+                          _groupHover={{ textDecoration: 'underline' }}
+                          display="flex"
+                          alignItems="center"
+                          gap={1}
+                        >
+                          {lang === 'tr' ? 'Devamını Oku' :
+                           lang === 'en' ? 'Read More' :
+                           lang === 'de' ? 'Weiterlesen' :
+                           lang === 'fr' ? 'Lire la suite' :
+                           lang === 'ru' ? 'Читать далее' :
+                           lang === 'ar' ? 'اقرأ المزيد' : 'Read More'}
+                           <Text as="span" aria-hidden="true">→</Text>
+                        </Text>
+                      </Box>
                     </VStack>
                   </Box>
                 )

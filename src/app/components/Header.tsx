@@ -136,7 +136,7 @@ export function Header() {
           <Flex display={{ base: 'none', md: 'flex' }} alignItems="center" gap={4}>
             {navigation[currentLang]?.map((item) => (
               <Link key={item.href} href={`/${currentLang}${item.href}`}>
-                <Button variant="ghost" size="md">
+                <Button variant="ghost" size="md" color="black">
                   {item.name}
                 </Button>
               </Link>
@@ -226,10 +226,10 @@ export function Header() {
               <DrawerCloseButton />
               <DrawerHeader borderBottomWidth="1px">Menu</DrawerHeader>
               <DrawerBody>
-                <VStack spacing={4} align="stretch" mt={4}>
+                <VStack spacing={4} align="stretch">
                   {navigation[currentLang]?.map((item) => (
                     <Link key={item.href} href={`/${currentLang}${item.href}`}>
-                      <Button variant="ghost" w="full" onClick={onClose}>
+                      <Button variant="ghost" w="full" color="black">
                         {item.name}
                       </Button>
                     </Link>
