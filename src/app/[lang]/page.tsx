@@ -99,8 +99,8 @@ export default function Home() {
     <Box>
       {/* Hero Section */}
       <Box 
-        bgGradient="linear(to-r, brand.secondary.800, brand.primary.800)"
-        color="white"
+        bg="white"
+        color="gray.800"
         py={20}
         position="relative"
         overflow="hidden"
@@ -111,24 +111,14 @@ export default function Home() {
               as="h1" 
               size="2xl" 
               fontWeight="bold"
-              textShadow="2px 2px 4px rgba(0,0,0,0.2)"
+              color="gray.800"
             >
               {text.title}
             </Heading>
             <Text 
               fontSize="xl" 
               maxW="2xl" 
-              opacity={0.95}
-              _before={{
-                content: '""',
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                right: 0,
-                bottom: 0,
-                bg: 'rgba(0,0,0,0.3)',
-                zIndex: -1
-              }}
+              color="gray.600"
             >
               {text.subtitle}
             </Text>
